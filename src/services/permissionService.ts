@@ -1,25 +1,21 @@
-import {Pool} from "mysql2/promise";
-
 import {IResult, ResultError} from "../shared/Result";
 import {IPermission} from "../models/Permission";
 import PermissionRepository from "../repositories/permissionRepository";
 
 export default class PermissionService
 {
-    private readonly pool: Pool;
     private readonly permRepo:PermissionRepository;
 
-    constructor(pool:Pool) {
-        this.pool = pool;
-        this.permRepo = new PermissionRepository(pool);
+    constructor() {
+        this.permRepo = new PermissionRepository();
     }
 
     /**
      * Get a permission list
      */
-    async getPermissions(): Promise<IResult<IPermission[]>> {
+    async getPermissions(name:string, description:string): Promise<IResult<IPermission[]>> {
         try {
-            return await this.permRepo.getPermissions();
+            return await this.permRepo.getPermissions(name, description);
         } catch (err) {
             return ResultError.getDefaultError<IPermission[]>(err,`permissionService.getPermissions`);
         }

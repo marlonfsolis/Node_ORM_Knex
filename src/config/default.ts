@@ -7,7 +7,7 @@ const config = {
     "db": {
         "username": "username",
         "password": "password",
-        "name": "node-express-ts",
+        "name": "NodeOrmKnexDb",
         "host": "host",
         "trust-server-certificate": true
     },

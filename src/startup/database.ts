@@ -1,7 +1,7 @@
 import {Express} from "express";
 
 import {dbDebug} from './debuggers';
-import db from "../knex/db";
+import db from "../knex";
 
 
 const createDbConnection = (app: Express) => {

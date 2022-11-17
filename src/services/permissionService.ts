@@ -1,6 +1,7 @@
 import {IResult, ResultError} from "../shared/Result";
 import {IPermission} from "../models/Permission";
 import PermissionRepository from "../repositories/permissionRepository";
+import {GetPermissionsQuery} from "../shared/Types";
 
 export default class PermissionService
 {
@@ -13,9 +14,9 @@ export default class PermissionService
     /**
      * Get a permission list
      */
-    async getPermissions(name:string, description:string): Promise<IResult<IPermission[]>> {
+    async getPermissions(params:GetPermissionsQuery): Promise<IResult<IPermission[]>> {
         try {
-            return await this.permRepo.getPermissions(name, description);
+            return await this.permRepo.getPermissions(params);
         } catch (err) {
             return ResultError.getDefaultError<IPermission[]>(err,`permissionService.getPermissions`);
         }

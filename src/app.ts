@@ -13,6 +13,7 @@ import createDbConnection from "./startup/database";
 
 import {validateConfig} from "./utils/configuration";
 
+
 const app = express();
 
 // validate the configuration values

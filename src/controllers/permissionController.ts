@@ -9,6 +9,8 @@ import {
     HttpResponseOk
 } from "../shared/HttpResponse";
 import {IPermission} from "../models/Permission";
+import {GetPermissionsQuery} from "../shared/Types";
+
 import {IErr} from "../shared/Err";
 import {debug} from "../startup/debuggers";
 
@@ -16,14 +18,12 @@ import {debug} from "../startup/debuggers";
 /** Get permission list. */
 export const getPermissions = async (req:Request, res:Response) => {
     let data: IPermission[]|undefined;
-    const name = req.query.name as string;
-    const description = req.query.description as string;
 
-    debug(`name`,name, `description`,description);
+    const qVals = req.query as GetPermissionsQuery;
 
     const permServ = new PermissionService();
 
-    const result = await permServ.getPermissions(name, description);
+    const result = await permServ.getPermissions(qVals);
     if (!result.success) {
         return new HttpResponseInternalServerError(res, [result.err!]);
     }

@@ -2,8 +2,8 @@ import {IPermission} from "../models/Permission";
 import {IResult, ResultOk, ResultError} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IOutputResult} from "../shared/SqlResult";
-// import db from "../shared/Database";
-import db from "../knex/db";
+import db from "../knex";
+import {GetPermissionsQuery} from "../shared/Types";
 
 
 
@@ -14,26 +14,21 @@ export default class PermissionRepository
     /**
      * Get a permission list
      */
-    async getPermissions(name: string, description: string): Promise<IResult<IPermission[]>> {
+    async getPermissions(params:GetPermissionsQuery): Promise<IResult<IPermission[]>> {
         let permissions = [] as IPermission[];
 
-        // const p = await db<IPermission>(`permission`)
-        //     .select(`name`, `description`)
-        //     .limit(10)
-        //     .offset(0);
-
-
         let query = db<IPermission>(`permission`);
-        if (name && name.length > 0) query.where({name: name});
-        if (description && description.length > 0) query.where({description: description});
+        // Filter
+        if (params.name_f && params.name_f.length > 0)
+            query = query.where({name: params.name_f});
+        if (params.description_f && params.description_f.length > 0)
+            query = query.where({description: params.description_f});
+        // Search
+        if (params.name_f && params.name_s.length > 0) query
         const p = await query
             .select(`name`, `description`)
             .limit(10)
             .offset(0);
-
-            // .select(`name`, `description`)
-            // .limit(10)
-            // .offset(0);
 
         // const inValues = [0,0,null,null];
         // const r = await db.call("sp_permissions_readlist",inValues,["@result"], this.pool);

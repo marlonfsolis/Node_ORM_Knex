@@ -1,3 +1,3 @@
-export const convertTo = function<T>(v:any) {
+export const convertTo = function <T>(v: any): T {
     return v as T;
 };

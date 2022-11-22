@@ -1,7 +1,7 @@
 import {IResult, ResultError} from "../shared/Result";
 import {IPermission} from "../models/Permission";
 import PermissionRepository from "../repositories/permissionRepository";
-import {GetPermissionsQuery} from "../shared/Types";
+import {GetPermissionsQuery} from "../shared/Classes";
 
 export default class PermissionService
 {

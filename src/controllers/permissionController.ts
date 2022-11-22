@@ -9,7 +9,7 @@ import {
     HttpResponseOk
 } from "../shared/HttpResponse";
 import {IPermission} from "../models/Permission";
-import {GetPermissionsQuery} from "../shared/Types";
+import {GetPermissionsQuery} from "../shared/Classes";
 import {convertTo} from "../utils";
 
 
@@ -21,7 +21,9 @@ import {debug} from "../startup/debuggers";
 export const getPermissions = async (req:Request, res:Response) => {
     let data: IPermission[]|undefined;
 
-    const qVal = convertTo<GetPermissionsQuery>(req.query);
+    // const qVal = convertTo<GetPermissionsQuery>(req.query);
+    const qVal = new GetPermissionsQuery(req.query);
+
     const permServ = new PermissionService();
     debug(qVal);
 

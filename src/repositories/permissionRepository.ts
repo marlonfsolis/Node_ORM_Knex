@@ -3,9 +3,7 @@ import {IResult, ResultOk, ResultError} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IOutputResult} from "../shared/SqlResult";
 import db from "../knex";
-import {GetPermissionsQuery} from "../shared/Types";
-import {debug} from "util";
-
+import {GetPermissionsQuery} from "../shared/Classes";
 
 
 export default class PermissionRepository
@@ -18,48 +16,28 @@ export default class PermissionRepository
     async getPermissions(params:GetPermissionsQuery): Promise<IResult<IPermission[]>> {
         let permissions = [] as IPermission[];
 
-        // let query = db<IPermission>(`permission`);
-        // // Filter
-        // if (params.name_f && params.name_f.length > 0)
-        //     query = query.where({name: params.name_f});
-        // if (params.description_f && params.description_f.length > 0)
-        //     query = query.where({description: params.description_f});
-        // // Search
-        // if (params.name_s && params.name_s.length > 0)
-        //     query = query.whereLike(`name`, params.name_s);
-        // if (params.description_s && params.description_s.length > 0)
-        //     query = query.whereLike(`description`, params.description_s)
-
         let query = db<IPermission>(`permission`)
-            .where(`name`, params.name_f)
-            .andWhere(function(){
-                this.where(`description`, ``);
-                this.orWhere(`description`, params.description_f);
+            .where(function() {
+                if (params.name_f.length > 0)
+                    this.where(`name`, params.name_f);
             })
-            // .whereLike(`name`, params.name_s)
-            // .whereLike(`description`, params.description_s)
-            .limit(Number(params.limit))
-            .offset(Number(params.skip));
-        console.log(query.toSQL());
+            .andWhere(function() {
+                if (params.description_f.length > 0)
+                    this.where(`description`, params.description_f);
+            })
+            .andWhere(function () {
+               if (params.name_s.length > 0)
+                    this.orWhereLike(`name`, params.name_s)
+            })
+            .andWhere(function () {
+                if (params.description_s.length > 0)
+                    this.orWhereLike(`description`, params.description_s)
+            })
+            .limit(params.Limit)
+            .offset(params.Skip);
 
-        const p = await query
-            .select(`name`, `description`)
-            .limit(Number(params.limit))
-            .offset(Number(params.skip));
-
-
-
-        // const inValues = [0,0,null,null];
-        // const r = await db.call("sp_permissions_readlist",inValues,["@result"], this.pool);
-        // const callResult = r.getOutputVal<IOutputResult>("@result");
-        //
-        // if (!callResult.success) {
-        //     return new ResultError<IPermission[]>(
-        //         new Err(callResult.msg, "sp_permissions_readlist", callResult.errorLogId.toString())
-        //     );
-        // }
-
-        // permissions = r.getData<IPermission>(0);
+        const p = await query.select(`name`, `description`);
+        // console.log(query.toSQL());
 
         permissions = p as IPermission[];
         return new ResultOk<IPermission[]>(permissions);

@@ -1,4 +1,5 @@
 import {Err, IErr} from "./Err";
+import {ReasonPhrases, StatusCodes} from "http-status-codes";
 
 export interface IResult<T> {
     success: boolean;
@@ -21,8 +22,12 @@ export class Result<T> implements IResult<T> {
     }
 
     getErrorCode() {
-        const code = this.err?.msg.split(` - `)[1].slice(0,3);
-        console.log(code);
+        let code = `500`;
+        const msgArr = this.err?.msg?.split(`|`);
+        if (Array.isArray(msgArr) && msgArr.length > 1) {
+            code = msgArr[0];
+            // console.log(code);
+        }
 
         if (!code) return `500`;
         return code;
@@ -41,12 +46,40 @@ export class ResultError<T> extends Result<T> {
         super(false, undefined, err);
     }
 
-    static getDefaultError<T>(err:any, location:string) {
+    static getDefaultError<T>(errMsg:string, location:string) {
+        const space = errMsg.length > 0 ? ` ` : ``;
         return new ResultError<T>(
             new Err(
-                `Error - Something bad happen. ${JSON.stringify(err)}`,
+                `500|Something bad happen.${space}${errMsg}`,
                 location
             )
         );
+    }
+}
+
+export class ResultErrorBadRequest<T> extends Result<T> {
+    constructor(msg: string, location:string, errorLogId: string) {
+        if(msg.length === 0) msg = ReasonPhrases.BAD_REQUEST;
+        msg = "".concat(StatusCodes.BAD_REQUEST.toString(), "|", msg);
+        const err = new Err(msg, location, errorLogId);
+        super(false, undefined, err);
+    }
+}
+
+export class ResultErrorNotFound<T> extends Result<T> {
+    constructor(msg: string, location:string, errorLogId: string) {
+        if(msg.length === 0) msg = ReasonPhrases.NOT_FOUND;
+        msg = "".concat(StatusCodes.NOT_FOUND.toString(), "|", msg);
+        const err = new Err(msg, location, errorLogId);
+        super(false, undefined, err);
+    }
+}
+
+export class ResultErrorInternalServer<T> extends Result<T> {
+    constructor(msg: string, location:string, errorLogId: string) {
+        if(msg.length === 0) msg = ReasonPhrases.INTERNAL_SERVER_ERROR;
+        msg = "".concat(StatusCodes.INTERNAL_SERVER_ERROR.toString(), "|", msg);
+        const err = new Err(msg, location, errorLogId);
+        super(false, undefined, err);
     }
 }

@@ -4,7 +4,7 @@ import {validationResult} from "express-validator";
 import PermissionService from "../services/permissionService";
 import {
     HttpResponseBadRequest,
-    HttpResponseCreated,
+    HttpResponseCreated, HttpResponseError,
     HttpResponseInternalServerError, HttpResponseNotFound,
     HttpResponseOk
 } from "../shared/HttpResponse";
@@ -25,11 +25,11 @@ export const getPermissions = async (req:Request, res:Response) => {
     const qVal = new GetPermissionsQuery(req.query);
 
     const permServ = new PermissionService();
-    debug(qVal);
+    // debug(qVal);
 
     const result = await permServ.getPermissions(qVal);
     if (!result.success) {
-        return new HttpResponseInternalServerError(res, [result.err!]);
+        return new HttpResponseError(res, result);
     }
 
     data = result.data;

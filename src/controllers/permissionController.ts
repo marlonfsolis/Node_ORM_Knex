@@ -10,6 +10,8 @@ import {
 } from "../shared/HttpResponse";
 import {IPermission} from "../models/Permission";
 import {GetPermissionsQuery} from "../shared/Types";
+import {convertTo} from "../utils";
+
 
 import {IErr} from "../shared/Err";
 import {debug} from "../startup/debuggers";
@@ -19,11 +21,11 @@ import {debug} from "../startup/debuggers";
 export const getPermissions = async (req:Request, res:Response) => {
     let data: IPermission[]|undefined;
 
-    const qVals = req.query as GetPermissionsQuery;
-
+    const qVal = convertTo<GetPermissionsQuery>(req.query);
     const permServ = new PermissionService();
+    debug(qVal);
 
-    const result = await permServ.getPermissions(qVals);
+    const result = await permServ.getPermissions(qVal);
     if (!result.success) {
         return new HttpResponseInternalServerError(res, [result.err!]);
     }

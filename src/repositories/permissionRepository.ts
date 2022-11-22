@@ -4,6 +4,7 @@ import {Err} from "../shared/Err";
 import {IOutputResult} from "../shared/SqlResult";
 import db from "../knex";
 import {GetPermissionsQuery} from "../shared/Types";
+import {debug} from "util";
 
 
 
@@ -17,18 +18,36 @@ export default class PermissionRepository
     async getPermissions(params:GetPermissionsQuery): Promise<IResult<IPermission[]>> {
         let permissions = [] as IPermission[];
 
-        let query = db<IPermission>(`permission`);
-        // Filter
-        if (params.name_f && params.name_f.length > 0)
-            query = query.where({name: params.name_f});
-        if (params.description_f && params.description_f.length > 0)
-            query = query.where({description: params.description_f});
-        // Search
-        if (params.name_f && params.name_s.length > 0) query
+        // let query = db<IPermission>(`permission`);
+        // // Filter
+        // if (params.name_f && params.name_f.length > 0)
+        //     query = query.where({name: params.name_f});
+        // if (params.description_f && params.description_f.length > 0)
+        //     query = query.where({description: params.description_f});
+        // // Search
+        // if (params.name_s && params.name_s.length > 0)
+        //     query = query.whereLike(`name`, params.name_s);
+        // if (params.description_s && params.description_s.length > 0)
+        //     query = query.whereLike(`description`, params.description_s)
+
+        let query = db<IPermission>(`permission`)
+            .where(`name`, params.name_f)
+            .andWhere(function(){
+                this.where(`description`, ``);
+                this.orWhere(`description`, params.description_f);
+            })
+            // .whereLike(`name`, params.name_s)
+            // .whereLike(`description`, params.description_s)
+            .limit(Number(params.limit))
+            .offset(Number(params.skip));
+        console.log(query.toSQL());
+
         const p = await query
             .select(`name`, `description`)
-            .limit(10)
-            .offset(0);
+            .limit(Number(params.limit))
+            .offset(Number(params.skip));
+
+
 
         // const inValues = [0,0,null,null];
         // const r = await db.call("sp_permissions_readlist",inValues,["@result"], this.pool);

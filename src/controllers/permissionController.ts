@@ -8,7 +8,7 @@ import {
     HttpResponseInternalServerError, HttpResponseNotFound,
     HttpResponseOk
 } from "../shared/HttpResponse";
-import {IPermission} from "../models/Permission";
+import {IPermission, Permission} from "../models/Permission";
 import {GetPermissionsQuery} from "../shared/Classes";
 import {convertTo} from "../utils";
 
@@ -40,24 +40,20 @@ export const getPermissions = async (req:Request, res:Response) => {
 export const createPermission = async (req: Request, res: Response) => {
     let data: IPermission|undefined;
 
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //     const errs = errors.array({ onlyFirstError: false }) as IErr[];
-    //     return new HttpResponseBadRequest(res, errs);
-    // }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errs = errors.array({ onlyFirstError: false }) as IErr[];
+        return new HttpResponseBadRequest(res, errs);
+    }
 
-    // const permServ = new PermissionService(req.app.locals.pool);
-    //
-    // const p = req.body as IPermission;
-    // const result = await permServ.createPermission(p);
-    // if (!result.success || !result.data) {
-    //     const code = result.getErrorCode();
-    //     if (code === `400`)
-    //         return new HttpResponseBadRequest(res, [result.err!]);
-    //     return new HttpResponseInternalServerError(res,[result.err!]);
-    // }
+    const permServ = new PermissionService();
+    const p = new Permission(req.body as IPermission);
+    const result = await permServ.createPermission(p);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res, result);
+    }
 
-    return new HttpResponseCreated(res, data);
+    return new HttpResponseCreated(res, result.data);
 };
 
 /** DELETE a permission */

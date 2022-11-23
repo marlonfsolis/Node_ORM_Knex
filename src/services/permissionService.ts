@@ -28,13 +28,14 @@ export default class PermissionService
     /**
      * Create a permission
      */
-    // async createPermission(p:IPermission): Promise<IResult<IPermission>> {
-    //     try {
-    //         return await this.permRepo.createPermission(p);
-    //     } catch (err) {
-    //         return ResultError.getDefaultError<IPermission>(err,`permissionService.createPermission`);
-    //     }
-    // }
+    async createPermission(p:IPermission): Promise<IResult<IPermission>> {
+        try {
+            return await this.permRepo.createPermission(p);
+        } catch (err:any) {
+            return new ResultErrorInternalServer<IPermission>(err.toString(),
+                `permissionService.createPermission`, `0`);
+        }
+    }
 
 
     /**

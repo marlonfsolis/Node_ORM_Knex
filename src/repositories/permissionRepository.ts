@@ -1,9 +1,12 @@
 import {IPermission} from "../models/Permission";
-import {IResult, ResultOk, ResultError} from "../shared/Result";
+import {IResult, ResultOk, ResultError, ResultErrorNotFound, ResultErrorBadRequest} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IOutputResult} from "../shared/SqlResult";
 import db from "../knex";
 import {GetPermissionsQuery} from "../shared/Classes";
+import {Models} from "../models";
+import {dbDebug} from "../startup/debuggers";
+import {first} from "lodash";
 
 
 export default class PermissionRepository
@@ -47,17 +50,21 @@ export default class PermissionRepository
     async createPermission(p:IPermission): Promise<IResult<IPermission>> {
         let permission: IPermission|undefined;
 
-        // const inValues = [JSON.stringify(p)];
-        // const r = await db.call("sp_permissions_create", inValues,["@result"], this.pool);
-        // const callResult  = r.getOutputVal<IOutputResult>("@result");
-        //
-        // if (!callResult.success) {
-        //     return new ResultError(
-        //         new Err(callResult.msg, "sp_permissions_create", callResult.errorLogId.toString())
-        //     )
-        // }
-        //
-        // permission = r.getData<IPermission>(0)[0];
+        // Check if exists
+        const exists = await db<IPermission>(Models.permission)
+            .where(`name`, p.name)
+            .count({c:`name`});
+        if (exists[0].c && exists[0].c > 0) {
+            return new ResultErrorBadRequest(
+                `Permission already exists.`, `permissionRepository.createPermission`, `0`
+            );
+        }
+
+        await db<IPermission>(Models.permission).insert(p);
+        permission = await db<IPermission>(Models.permission)
+            .where(`name`, p.name)
+            .first(`*`);
+
         return new ResultOk(permission);
     }
 

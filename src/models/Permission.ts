@@ -5,6 +5,16 @@ export interface IPermission {
     description: string
 }
 
+export class Permission implements IPermission {
+    public name:string;
+    public description:string = ``;
+
+    constructor(p: IPermission) {
+        this.name = p.name;
+        this.description = p.description;
+    }
+}
+
 /**
  * Validate permission input param
  * */

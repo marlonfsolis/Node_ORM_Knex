@@ -53,13 +53,14 @@ export default class PermissionService
     /**
      * Get a permission
      */
-    // async getPermission(pName:string): Promise<IResult<IPermission>> {
-    //     try {
-    //         return await this.permRepo.getPermission(pName);
-    //     } catch (err) {
-    //         return ResultError.getDefaultError<IPermission>(err,`permissionService.getPermission`);
-    //     }
-    // }
+    async getPermission(pName:string): Promise<IResult<IPermission>> {
+        try {
+            return await this.permRepo.getPermission(pName);
+        } catch (err:any) {
+            return new ResultErrorInternalServer<IPermission>(
+                err.toString(),`permissionService.deletePermission`, `0`);
+        }
+    }
 
     /**
      * Update a permission

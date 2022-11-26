@@ -75,18 +75,15 @@ export const deletePermission = async (req: Request, res: Response) => {
 export const getPermission = async (req: Request, res: Response) => {
     let data: IPermission|undefined;
 
-    // const permServ = new PermissionService(req.app.locals.pool);
-    //
-    // const pName = req.params.name;
-    // const result = await permServ.getPermission(pName);
-    // if (!result.success || !result.data) {
-    //     const code = result.getErrorCode();
-    //     if (code === `400`) return new HttpResponseBadRequest(res, [result.err!]);
-    //     if (code === `404`) return new HttpResponseNotFound(res, [result.err!]);
-    //     return new HttpResponseInternalServerError(res,[result.err!]);
-    // }
+    const permServ = new PermissionService();
 
-    return new HttpResponseCreated(res, data);
+    const pName = req.params.name;
+    const result = await permServ.getPermission(pName);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res, result);
+    }
+
+    return new HttpResponseOk(res, result.data);
 };
 
 

@@ -95,17 +95,16 @@ export default class PermissionRepository
     async getPermission(pName:string): Promise<IResult<IPermission>> {
         let permission: IPermission|undefined;
 
-        // const inValues = [pName];
-        // const r = await db.call("sp_permissions_read", inValues,["@result"], this.pool);
-        // const callResult  = r.getOutputVal<IOutputResult>("@result");
-        //
-        // if (!callResult.success) {
-        //     return new ResultError(
-        //         new Err(callResult.msg, "sp_permissions_read", callResult.errorLogId.toString())
-        //     )
-        // }
-        //
-        // permission = r.getData<IPermission>(0)[0];
+        const per = await db<IPermission>(Models.permission)
+            .where(`name`, pName)
+            .select(`*`);
+        if (per.length === 0) {
+            return new ResultErrorNotFound(
+                `Permission not found.`, `permissionRepository.getPermission`, `0`
+            )
+        }
+
+        permission = per[0];
         return new ResultOk(permission);
     }
 

@@ -5,8 +5,9 @@ import {IOutputResult} from "../shared/SqlResult";
 import db from "../knex";
 import {GetPermissionsQuery} from "../shared/Classes";
 import {Models} from "../models";
+import * as kt from "./knExtentions";
+
 import {dbDebug} from "../startup/debuggers";
-import {first} from "lodash";
 
 
 export default class PermissionRepository
@@ -72,17 +73,21 @@ export default class PermissionRepository
     async deletePermission(pName:string): Promise<IResult<IPermission>> {
         let permission: IPermission|undefined;
 
-        // const inValues = [pName];
-        // const r = await db.call("sp_permissions_delete", inValues,["@result"], this.pool);
-        // const callResult  = r.getOutputVal<IOutputResult>("@result");
-        //
-        // if (!callResult.success) {
-        //     return new ResultError(
-        //         new Err(callResult.msg, "sp_permissions_delete", callResult.errorLogId.toString())
-        //     )
-        // }
-        //
-        // permission = r.getData<IPermission>(0)[0];
+        //const exists = await kt.exists<IPermission>(Models.permission, {name: pName});
+        //if (!exists) {}
+        const query = db<IPermission>(Models.permission)
+            .where(`name`, pName);
+
+        const del = await query.select(`*`);
+        if (del.length === 0) {
+            return new ResultErrorNotFound(
+                `Permission not found.`, `permissionRepository.deletePermission`, `0`
+            );
+        }
+
+        permission = del[0];
+        await query.delete();
+
         return new ResultOk(permission);
     }
 

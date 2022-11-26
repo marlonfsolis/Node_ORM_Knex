@@ -1,3 +1,5 @@
+import knex from "knex";
+
 import {IPermission} from "../models/Permission";
 import {IResult, ResultOk, ResultError, ResultErrorNotFound, ResultErrorBadRequest} from "../shared/Result";
 import {Err} from "../shared/Err";
@@ -8,6 +10,8 @@ import {Models} from "../models";
 import * as kt from "./knExtentions";
 
 import {dbDebug} from "../startup/debuggers";
+import {selectColor} from "debug";
+import {update} from "lodash";
 
 
 export default class PermissionRepository
@@ -112,17 +116,36 @@ export default class PermissionRepository
     async updatePermission(pName:string, p:IPermission): Promise<IResult<IPermission>> {
         let permission: IPermission|undefined;
 
-        // const inValues = [pName, JSON.stringify(p)];
-        // const r = await db.call("sp_permissions_update", inValues,["@result"], this.pool);
-        // const callResult  = r.getOutputVal<IOutputResult>("@result");
-        //
-        // if (!callResult.success) {
-        //     return new ResultError(
-        //         new Err(callResult.msg, "sp_permissions_update", callResult.errorLogId.toString())
-        //     )
-        // }
-        //
-        // permission = r.getData<IPermission>(0)[0];
+        // Check if the target exists
+        let exists = await kt.exists<IPermission>(Models.permission, {name: pName});
+        if (!exists) {
+            return new ResultErrorNotFound(
+                `Permission not found.`, `permissionRepository.updatePermission`, `0`
+            )
+        }
+
+        // Check if the new name is valid
+        const newNameExists = await db<IPermission>(Models.permission)
+            .where(`name`,p.name)
+            .andWhereNot(`name`, pName)
+            .select(`name`);
+        if (newNameExists.length > 0) {
+            return new ResultErrorBadRequest(
+                `Permission already exists.`, `permissionRepository.updatePermission`, `0`
+            )
+        }
+
+        // Update
+        await db<IPermission>(Models.permission)
+            .where(`name`, pName)
+            .update(p);
+
+        // Return the new permission
+        const updated = await db<IPermission>(Models.permission)
+            .where(`name`, p.name)
+            .select(`*`);
+        permission = updated[0];
+
         return new ResultOk(permission);
     }
 }

@@ -1,5 +1,5 @@
 import {IResult, ResultError, ResultErrorInternalServer} from "../shared/Result";
-import {IGroup, GetGroupsQuery} from "../models/Group";
+import {IGroup, GetGroupsQuery} from "../models/Group.model";
 import GroupRepository from "../repositories/groupRepository";
 
 

@@ -1,7 +1,7 @@
 import {Router} from "express";
 
 import * as GroupController from "../controllers/groupController";
-import {groupValidator} from "../models/Group";
+import {groupValidator} from "../models/Group.model";
 
 
 const router = Router();

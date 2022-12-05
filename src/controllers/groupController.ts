@@ -8,7 +8,7 @@ import {
     HttpResponseError,
     HttpResponseOk
 } from "../shared/HttpResponse";
-import {IGroup, Group, GetGroupsQuery} from "../models/Group";
+import {IGroup, GroupModel, GetGroupsQuery} from "../models/Group.model";
 import {IErr,validateReq} from "../shared/Err";
 
 const groupServ = new GroupService();
@@ -37,7 +37,7 @@ export const createGroup = async (req: Request, res: Response) => {
         return new HttpResponseBadRequest(res, errs);
     }
 
-    const g = new Group(req.body as IGroup);
+    const g = new GroupModel(req.body as IGroup);
     const result = await groupServ.createGroup(g);
     if (!result.success || !result.data) {
         return new HttpResponseError(res, result);

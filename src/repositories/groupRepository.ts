@@ -6,11 +6,11 @@ import {Models} from "../models";
 import * as kt from "./knExtentions";
 
 import {dbDebug} from "../startup/debuggers";
-import {IGroup,GetGroupsQuery} from "../models/Group";
+import {IGroup,GetGroupsQuery} from "../models/Group.model";
 
 
 /**
- * Group Repository
+ * GroupModel Repository
  */
  export default class GroupRepository
 {

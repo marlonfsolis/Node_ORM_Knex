@@ -9,7 +9,7 @@ export interface IGroup {
     description:string;
 }
 
-export class Group implements IGroup {
+export class GroupModel implements IGroup {
     public description: string;
     public name: string;
 
@@ -28,7 +28,7 @@ export const groupValidator = () => [
 ];
 
 /**
- * Group query class
+ * GroupModel query class
  * */
 export class GetGroupsQuery extends GetModelQuery{
     public name_f: string;

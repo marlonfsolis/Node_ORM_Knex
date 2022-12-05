@@ -8,12 +8,8 @@ import {
     HttpResponseInternalServerError, HttpResponseNotFound,
     HttpResponseOk
 } from "../shared/HttpResponse";
-import {IPermission, Permission} from "../models/Permission";
-import {GetPermissionsQuery} from "../shared/Classes";
-import {convertTo} from "../utils";
-
-
-import {IErr} from "../shared/Err";
+import {IPermission, Permission, GetPermissionsQuery} from "../models/Permission";
+import {IErr, validateReq} from "../shared/Err";
 import {debug} from "../startup/debuggers";
 
 
@@ -40,9 +36,8 @@ export const getPermissions = async (req:Request, res:Response) => {
 export const createPermission = async (req: Request, res: Response) => {
     let data: IPermission|undefined;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: false }) as IErr[];
+    const {isValid, errs} = validateReq(req);
+    if (!isValid) {
         return new HttpResponseBadRequest(res, errs);
     }
 

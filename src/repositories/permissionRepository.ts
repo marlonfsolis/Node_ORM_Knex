@@ -1,11 +1,10 @@
 import knex from "knex";
 
-import {IPermission} from "../models/Permission";
+import {IPermission,GetPermissionsQuery} from "../models/Permission";
 import {IResult, ResultOk, ResultError, ResultErrorNotFound, ResultErrorBadRequest} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IOutputResult} from "../shared/SqlResult";
 import db from "../knex";
-import {GetPermissionsQuery} from "../shared/Classes";
 import {Models} from "../models";
 import * as kt from "./knExtentions";
 

@@ -1,3 +1,4 @@
 export const Models = {
-    permission: `permission`
+    permission: `permission`,
+    group: `group`
 }

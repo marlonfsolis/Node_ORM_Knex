@@ -3,34 +3,34 @@ import {check} from "express-validator";
 import GetModelQuery from "./GetModelQuery.model";
 
 
-export interface IPermission {
-    name: string;
-    description: string
+
+export interface IGroup {
+    name:string;
+    description:string;
 }
 
-export class Permission implements IPermission {
-    public name:string;
-    public description:string = ``;
+export class Group implements IGroup {
+    public description: string;
+    public name: string;
 
-    constructor(p: IPermission) {
-        this.name = p.name;
-        this.description = p.description;
+    constructor(g:IGroup) {
+        this.name = g.name;
+        this.description = g.description;
     }
 }
 
 /**
- * Validate permission input param
+ * Validate group input param
  * */
-export const permissionValidator = () => [
+export const groupValidator = () => [
     check(`name`).exists().isLength({min:3, max:100}),
     check(`description`).optional().isLength({min:0, max:1000})
 ];
 
-
 /**
-* Permission query class
-*/
-export class GetPermissionsQuery extends GetModelQuery {
+ * Group query class
+ * */
+export class GetGroupsQuery extends GetModelQuery{
     public name_f: string;
     public description_f: string;
     public name_s: string;
@@ -44,4 +44,3 @@ export class GetPermissionsQuery extends GetModelQuery {
         this.description_s = val.description_s || ``;
     }
 }
-

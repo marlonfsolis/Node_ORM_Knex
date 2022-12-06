@@ -84,7 +84,7 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
     //     const del = await query.select(`*`);
     //     if (del.length === 0) {
     //         return new ResultErrorNotFound(
-    //             `Permission not found.`, `permissionRepository.deletePermission`, `0`
+    //             `PermissionModel not found.`, `permissionRepository.deletePermission`, `0`
     //         );
     //     }
     //
@@ -103,7 +103,7 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
     //         .select(`*`);
     //     if (per.length === 0) {
     //         return new ResultErrorNotFound(
-    //             `Permission not found.`, `permissionRepository.getPermission`, `0`
+    //             `PermissionModel not found.`, `permissionRepository.getPermission`, `0`
     //         )
     //     }
     //
@@ -119,7 +119,7 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
     //     let exists = await kt.exists<IPermission>(Models.permission, {name: pName});
     //     if (!exists) {
     //         return new ResultErrorNotFound(
-    //             `Permission not found.`, `permissionRepository.updatePermission`, `0`
+    //             `PermissionModel not found.`, `permissionRepository.updatePermission`, `0`
     //         )
     //     }
     //
@@ -130,7 +130,7 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
     //         .select(`name`);
     //     if (newNameExists.length > 0) {
     //         return new ResultErrorBadRequest(
-    //             `Permission already exists.`, `permissionRepository.updatePermission`, `0`
+    //             `PermissionModel already exists.`, `permissionRepository.updatePermission`, `0`
     //         )
     //     }
 

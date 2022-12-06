@@ -5,7 +5,7 @@
 exports.up = function(knex) {
   let schema = knex.schema;
 
-  // Permission table
+  // PermissionModel table
   schema = schema.createTable(`permission`, function (t) {
       t.string(`name`).primary();
       t.string(`description`);

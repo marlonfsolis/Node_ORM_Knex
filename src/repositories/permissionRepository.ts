@@ -1,6 +1,6 @@
 import knex from "knex";
 
-import {IPermission,GetPermissionsQuery} from "../models/Permission";
+import {IPermission,GetPermissionsQuery} from "../models/Permission.model";
 import {IResult, ResultOk, ResultError, ResultErrorNotFound, ResultErrorBadRequest} from "../shared/Result";
 import {Err} from "../shared/Err";
 import {IOutputResult} from "../shared/SqlResult";

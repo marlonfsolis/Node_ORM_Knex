@@ -8,7 +8,7 @@ import {
     HttpResponseInternalServerError, HttpResponseNotFound,
     HttpResponseOk
 } from "../shared/HttpResponse";
-import {IPermission, Permission, GetPermissionsQuery} from "../models/Permission";
+import {IPermission, PermissionModel, GetPermissionsQuery} from "../models/Permission.model";
 import {IErr, validateReq} from "../shared/Err";
 import {debug} from "../startup/debuggers";
 
@@ -42,7 +42,7 @@ export const createPermission = async (req: Request, res: Response) => {
     }
 
     const permServ = new PermissionService();
-    const p = new Permission(req.body as IPermission);
+    const p = new PermissionModel(req.body as IPermission);
     const result = await permServ.createPermission(p);
     if (!result.success || !result.data) {
         return new HttpResponseError(res, result);

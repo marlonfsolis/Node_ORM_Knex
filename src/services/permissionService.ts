@@ -1,10 +1,10 @@
 import {IResult, ResultError, ResultErrorInternalServer} from "../shared/Result";
-import {IPermission,GetPermissionsQuery} from "../models/Permission";
+import {IPermission,GetPermissionsQuery} from "../models/Permission.model";
 import PermissionRepository from "../repositories/permissionRepository";
 
 
 /**
- * Permission Service
+ * PermissionModel Service
  */
 export default class PermissionService
 {

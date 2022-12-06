@@ -8,7 +8,7 @@ export interface IPermission {
     description: string
 }
 
-export class Permission implements IPermission {
+export class PermissionModel implements IPermission {
     public name:string;
     public description:string = ``;
 
@@ -28,7 +28,7 @@ export const permissionValidator = () => [
 
 
 /**
-* Permission query class
+* PermissionModel query class
 */
 export class GetPermissionsQuery extends GetModelQuery {
     public name_f: string;

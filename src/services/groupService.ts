@@ -37,16 +37,16 @@ async createGroup(g:IGroup): Promise<IResult<IGroup>> {
 
 
 /**
- * Delete a permission
+ * Delete a group
  */
-// async deletePermission(pName:string): Promise<IResult<IPermission>> {
-// try {
-//     return await this.permRepo.deletePermission(pName);
-// } catch (err: any) {
-//     return new ResultErrorInternalServer<IPermission>(
-//     err.toString(),`permissionService.deletePermission`, `0`);
-// }
-// }
+async deleteGroup(gName:string): Promise<IResult<IGroup>> {
+    try {
+        return await this.groupRepo.deleteGroup(gName);
+    } catch (err: any) {
+        return new ResultErrorInternalServer<IGroup>(
+        err.toString(),`groupService.deleteGroup`, `0`);
+    }
+}
 
 /**
  * Get a permission

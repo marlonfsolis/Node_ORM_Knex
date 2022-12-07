@@ -10,6 +10,8 @@ import {
 } from "../shared/HttpResponse";
 import {IGroup, GroupModel, GetGroupsQuery} from "../models/Group.model";
 import {IErr,validateReq} from "../shared/Err";
+import {IPermission} from "../models/Permission.model";
+import PermissionService from "../services/permissionService";
 
 const groupServ = new GroupService();
 
@@ -28,6 +30,7 @@ export const getGroups = async (req:Request, res:Response) => {
     return new HttpResponseOk(res, data);
 };
 
+
 /** Post a group */
 export const createGroup = async (req: Request, res: Response) => {
     let data: IGroup|undefined;
@@ -44,4 +47,20 @@ export const createGroup = async (req: Request, res: Response) => {
     }
 
     return new HttpResponseCreated(res, result.data);
+};
+
+
+/**
+ * DELETE a group
+ */
+export const deleteGroup = async (req: Request, res: Response) => {
+    let data: IGroup|undefined;
+
+    const gName = req.params.name;
+    const result = await groupServ.deleteGroup(gName);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res, result);
+    }
+
+    return new HttpResponseOk(res, result.data);
 };

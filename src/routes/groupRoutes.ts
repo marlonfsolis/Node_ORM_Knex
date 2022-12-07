@@ -6,20 +6,20 @@ import {groupValidator} from "../models/Group.model";
 
 const router = Router();
 
-/* GET permissions. */
+/* GET groups. */
 router.get('/', GroupController.getGroups);
 
 /* POST a group */
 router.post('/', groupValidator(), GroupController.createGroup);
 
-/* PUT a permission */
-// router.put('/:name', permissionValidator(), PermissionController.updatePermission);
+/* PUT a groups */
+// router.put('/:name', groupValidator(), GroupController.updateGroup);
 
-/* DELETE a permission */
-// router.delete('/:name', PermissionController.deletePermission);
+/* DELETE a groups */
+router.delete('/:name', GroupController.deleteGroup);
 
-/* GET a permission */
-// router.get('/:name', PermissionController.getPermission);
+/* GET a groups */
+// router.get('/:name', GroupController.getGroup);
 
 // export const usersRoutes = router;
 export default router;

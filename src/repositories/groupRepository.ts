@@ -72,7 +72,9 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
         return new ResultOk(group);
     }
 
-    /** Delete a group */
+    /**
+     * Delete a group
+     */
     async deleteGroup(gName:string): Promise<IResult<IGroup>> {
         let group: IGroup|undefined;
 
@@ -92,53 +94,55 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
         return new ResultOk(group);
     }
 
-    /** Get a group */
-    // async getPermission(pName:string): Promise<IResult<IPermission>> {
-    //     let group: IPermission|undefined;
-    //
-    //     const per = await db<IPermission>(Models.group)
-    //         .where(`name`, pName)
-    //         .select(`*`);
-    //     if (per.length === 0) {
-    //         return new ResultErrorNotFound(
-    //             `PermissionModel not found.`, `groupRepository.getPermission`, `0`
-    //         )
-    //     }
-    //
-    //     group = per[0];
-    //     return new ResultOk(group);
-    // }
+    /**
+     * Get a group
+     */
+    async getGroup(gName:string): Promise<IResult<IGroup>> {
+        let group: IGroup|undefined;
+
+        const groups = await db<IGroup>(Models.group)
+            .where(`name`, gName)
+            .select(`*`);
+        if (groups.length === 0) {
+            return new ResultErrorNotFound(
+                `GroupModel not found.`, `groupRepository.getGroup`, `0`
+            )
+        }
+
+        group = groups[0];
+        return new ResultOk(group);
+    }
 
     /** Update a group */
-    // async updatePermission(pName:string, p:IPermission): Promise<IResult<IPermission>> {
-    //     let group: IPermission|undefined;
+    // async updateGroup(gName:string, p:IGroup): Promise<IResult<IGroup>> {
+    //     let group: IGroup|undefined;
     //
     //     // Check if the target exists
-    //     let exists = await kt.exists<IPermission>(Models.group, {name: pName});
+    //     let exists = await kt.exists<IGroup>(Models.group, {name: gName});
     //     if (!exists) {
     //         return new ResultErrorNotFound(
-    //             `PermissionModel not found.`, `groupRepository.updatePermission`, `0`
+    //             `GroupModel not found.`, `groupRepository.updateGroup`, `0`
     //         )
     //     }
     //
     //     // Check if the new name is valid
-    //     const newNameExists = await db<IPermission>(Models.group)
+    //     const newNameExists = await db<IGroup>(Models.group)
     //         .where(`name`,p.name)
-    //         .andWhereNot(`name`, pName)
+    //         .andWhereNot(`name`, gName)
     //         .select(`name`);
     //     if (newNameExists.length > 0) {
     //         return new ResultErrorBadRequest(
-    //             `PermissionModel already exists.`, `groupRepository.updatePermission`, `0`
+    //             `GroupModel already exists.`, `groupRepository.updateGroup`, `0`
     //         )
     //     }
 
     //     // Update
-    //     await db<IPermission>(Models.group)
-    //         .where(`name`, pName)
+    //     await db<IGroup>(Models.group)
+    //         .where(`name`, gName)
     //         .update(p);
     //
     //     // Return the new group
-    //     const updated = await db<IPermission>(Models.group)
+    //     const updated = await db<IGroup>(Models.group)
     //         .where(`name`, p.name)
     //         .select(`*`);
     //     group = updated[0];

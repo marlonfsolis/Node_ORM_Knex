@@ -24,14 +24,14 @@ async getGroups(params:GetGroupsQuery): Promise<IResult<IGroup[]>> {
 
 
 /**
- * Create a permission
+ * Create a group
  */
 async createGroup(g:IGroup): Promise<IResult<IGroup>> {
     try {
         return await this.groupRepo.createGroup(g);
     } catch (err:any) {
         return new ResultErrorInternalServer<IGroup>(err.toString(),
-        `permissionService.createPermission`, `0`);
+        `groupService.createGroup`, `0`);
     }
 }
 
@@ -49,26 +49,26 @@ async deleteGroup(gName:string): Promise<IResult<IGroup>> {
 }
 
 /**
- * Get a permission
+ * Get a group
  */
-// async getPermission(pName:string): Promise<IResult<IPermission>> {
-// try {
-//     return await this.permRepo.getPermission(pName);
-// } catch (err:any) {
-//     return new ResultErrorInternalServer<IPermission>(
-//     err.toString(),`permissionService.deletePermission`, `0`);
-// }
-// }
+async getGroup(gName:string): Promise<IResult<IGroup>> {
+    try {
+        return await this.groupRepo.getGroup(gName);
+    } catch (err:any) {
+        return new ResultErrorInternalServer<IGroup>(
+        err.toString(),`groupService.deleteGroup`, `0`);
+    }
+}
 
 /**
- * Update a permission
+ * Update a group
  */
-// async updatePermission(pName:string, p:IPermission): Promise<IResult<IPermission>> {
+// async updateGroup(gName:string, p:IGroup): Promise<IResult<IGroup>> {
 // try {
-//     return await this.permRepo.updatePermission(pName, p);
+//     return await this.groupRepo.updateGroup(gName, p);
 // } catch (err:any) {
-//     return new ResultErrorInternalServer<IPermission>(
-//     err.toString(),`permissionService.deletePermission`, `0`);
+//     return new ResultErrorInternalServer<IGroup>(
+//     err.toString(),`groupService.deleteGroup`, `0`);
 // }
 // }
 }

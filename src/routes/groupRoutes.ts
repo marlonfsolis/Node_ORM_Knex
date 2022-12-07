@@ -19,7 +19,7 @@ router.post('/', groupValidator(), GroupController.createGroup);
 router.delete('/:name', GroupController.deleteGroup);
 
 /* GET a groups */
-// router.get('/:name', GroupController.getGroup);
+router.get('/:name', GroupController.getGroup);
 
 // export const usersRoutes = router;
 export default router;

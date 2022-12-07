@@ -10,8 +10,6 @@ import {
 } from "../shared/HttpResponse";
 import {IGroup, GroupModel, GetGroupsQuery} from "../models/Group.model";
 import {IErr,validateReq} from "../shared/Err";
-import {IPermission} from "../models/Permission.model";
-import PermissionService from "../services/permissionService";
 
 const groupServ = new GroupService();
 
@@ -64,3 +62,42 @@ export const deleteGroup = async (req: Request, res: Response) => {
 
     return new HttpResponseOk(res, result.data);
 };
+
+
+/**
+ * GET a group
+ */
+export const getGroup = async (req: Request, res: Response) => {
+    let data: IGroup|undefined;
+
+    const gName = req.params.name;
+    const result = await groupServ.getGroup(gName);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res, result);
+    }
+
+    return new HttpResponseOk(res, result.data);
+};
+
+
+/** Put a group */
+// export const updateGroup = async (req: Request, res: Response) => {
+//     let data: IGroup|undefined;
+//
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         const errs = errors.array({ onlyFirstError: false }) as IErr[];
+//         return new HttpResponseBadRequest(res, errs);
+//     }
+//
+//     const groupServ = new GroupService();
+//
+//     const gName = req.params.name;
+//     const p = req.body as IGroup;
+//     const result = await groupServ.updateGroup(gName, p);
+//     if (!result.success || !result.data) {
+//         return new HttpResponseError(res, result);
+//     }
+//
+//     return new HttpResponseOk(res, result.data);
+// };

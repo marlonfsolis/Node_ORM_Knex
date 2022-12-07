@@ -80,24 +80,24 @@ export const getGroup = async (req: Request, res: Response) => {
 };
 
 
-/** Put a group */
-// export const updateGroup = async (req: Request, res: Response) => {
-//     let data: IGroup|undefined;
-//
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         const errs = errors.array({ onlyFirstError: false }) as IErr[];
-//         return new HttpResponseBadRequest(res, errs);
-//     }
-//
-//     const groupServ = new GroupService();
-//
-//     const gName = req.params.name;
-//     const p = req.body as IGroup;
-//     const result = await groupServ.updateGroup(gName, p);
-//     if (!result.success || !result.data) {
-//         return new HttpResponseError(res, result);
-//     }
-//
-//     return new HttpResponseOk(res, result.data);
-// };
+/**
+ * Put a group
+ */
+export const updateGroup = async (req: Request, res: Response) => {
+    let data: IGroup|undefined;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errs = errors.array({ onlyFirstError: false }) as IErr[];
+        return new HttpResponseBadRequest(res, errs);
+    }
+
+    const gName = req.params.name;
+    const g = req.body as IGroup;
+    const result = await groupServ.updateGroup(gName, g);
+    if (!result.success || !result.data) {
+        return new HttpResponseError(res, result);
+    }
+
+    return new HttpResponseOk(res, result.data);
+};

@@ -113,40 +113,42 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
         return new ResultOk(group);
     }
 
-    /** Update a group */
-    // async updateGroup(gName:string, p:IGroup): Promise<IResult<IGroup>> {
-    //     let group: IGroup|undefined;
-    //
-    //     // Check if the target exists
-    //     let exists = await kt.exists<IGroup>(Models.group, {name: gName});
-    //     if (!exists) {
-    //         return new ResultErrorNotFound(
-    //             `GroupModel not found.`, `groupRepository.updateGroup`, `0`
-    //         )
-    //     }
-    //
-    //     // Check if the new name is valid
-    //     const newNameExists = await db<IGroup>(Models.group)
-    //         .where(`name`,p.name)
-    //         .andWhereNot(`name`, gName)
-    //         .select(`name`);
-    //     if (newNameExists.length > 0) {
-    //         return new ResultErrorBadRequest(
-    //             `GroupModel already exists.`, `groupRepository.updateGroup`, `0`
-    //         )
-    //     }
+    /**
+     * Update a group
+     */
+    async updateGroup(gName:string, g:IGroup): Promise<IResult<IGroup>> {
+        let group: IGroup|undefined;
 
-    //     // Update
-    //     await db<IGroup>(Models.group)
-    //         .where(`name`, gName)
-    //         .update(p);
-    //
-    //     // Return the new group
-    //     const updated = await db<IGroup>(Models.group)
-    //         .where(`name`, p.name)
-    //         .select(`*`);
-    //     group = updated[0];
-    //
-    //     return new ResultOk(group);
-    // }
+        // Check if the target exists
+        let exists = await kt.exists<IGroup>(Models.group, {name: gName});
+        if (!exists) {
+            return new ResultErrorNotFound(
+                `GroupModel not found.`, `groupRepository.updateGroup`, `0`
+            )
+        }
+
+        // Check if the new name is valid
+        const newNameExists = await db<IGroup>(Models.group)
+            .where(`name`,g.name)
+            .andWhereNot(`name`, gName)
+            .select(`name`);
+        if (newNameExists.length > 0) {
+            return new ResultErrorBadRequest(
+                `GroupModel already exists.`, `groupRepository.updateGroup`, `0`
+            )
+        }
+
+        // Update
+        await db<IGroup>(Models.group)
+            .where(`name`, gName)
+            .update(g);
+
+        // Return the new group
+        const updated = await db<IGroup>(Models.group)
+            .where(`name`, g.name)
+            .select(`*`);
+        group = updated[0];
+
+        return new ResultOk(group);
+    }
 }

@@ -22,6 +22,8 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
     async getGroups(params:GetGroupsQuery): Promise<IResult<IGroup[]>> {
         let groups = [] as IGroup[];
 
+        throw Error(`My error`);
+
         let query = db<IGroup>(Models.group)
             .where(function() {
                 if (params.name_f.length > 0)

@@ -1,5 +1,6 @@
-import {Express} from "express";
+import {Express, Request, Response, NextFunction} from "express";
 
+import * as IndexController from "../controllers/indexController";
 import {debug} from "./debuggers";
 
 import index_routes from "../routes/indexRoute";
@@ -17,7 +18,8 @@ const routesLoader = (app: Express) => {
     app.use("/api/permissions", permission_routes);
     app.use("/api/groups", group_routes);
 
-    app.use("*", (req, res) => { res.redirect(`/api/not-found`) });
+    app.use("*", IndexController.pageNotFound);
+    app.use(IndexController.errorNotHandled);
 
     debug("Routes loaded.");
 };

@@ -2,6 +2,7 @@ import express, {Request, Response, NextFunction} from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import path from "path";
+require('express-async-errors');
 
 // set the config folder path
 process.env["NODE_CONFIG_DIR"] = path.resolve(__dirname, "config");

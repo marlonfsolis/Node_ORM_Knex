@@ -15,11 +15,11 @@ export default class GroupService
      * Get a group list
      */
     async getGroups(params:GetGroupsQuery): Promise<IResult<IGroup[]>> {
-        try {
+        // try {
             return await this.groupRepo.getGroups(params);
-        } catch (err:any) {
-            return new ResultErrorInternalServer(err.toString(), `groupService.getGroups`, `0`);
-        }
+        // } catch (err:any) {
+        //     return new ResultErrorInternalServer(err.toString(), `groupService.getGroups`, `0`);
+        // }
     }
 
 

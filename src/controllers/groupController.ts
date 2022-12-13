@@ -10,8 +10,11 @@ import {
 } from "../shared/HttpResponse";
 import {IGroup, GroupModel, GetGroupsQuery} from "../models/Group.model";
 import {IErr,validateReq} from "../shared/Err";
+import IndexService from "../services/indexService";
+
 
 const groupServ = new GroupService();
+const indexServ = new IndexService();
 
 
 /** Get group list. */

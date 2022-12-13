@@ -1,4 +1,5 @@
 export const Models = {
     permission: `permission`,
-    group: `group`
+    group: `group`,
+    errorLog: `errorLog`
 }

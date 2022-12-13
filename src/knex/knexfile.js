@@ -1,5 +1,3 @@
-const {dbDebug} = require("../startup/debuggers");
-
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -18,7 +16,7 @@ module.exports = {
       min: 0,
       max: 10,
       afterCreate: function (conn, done) {
-        dbDebug(`Connexion created.`);
+        console.log(`Connexion created.`);
         done(null, conn);
       }
     },

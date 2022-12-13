@@ -7,6 +7,7 @@ import * as kt from "./knExtentions";
 
 import {dbDebug} from "../startup/debuggers";
 import {IGroup,GetGroupsQuery} from "../models/Group.model";
+import IndexService from "../services/indexService";
 
 
 /**
@@ -14,15 +15,17 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
  */
  export default class GroupRepository
 {
-    constructor() {}
+    private readonly indexServ:IndexService;
+
+    constructor() {
+        this.indexServ = new IndexService();
+    }
 
     /**
      * Get a group list
      */
     async getGroups(params:GetGroupsQuery): Promise<IResult<IGroup[]>> {
         let groups = [] as IGroup[];
-
-        throw Error(`My error`);
 
         let query = db<IGroup>(Models.group)
             .where(function() {
@@ -61,8 +64,9 @@ import {IGroup,GetGroupsQuery} from "../models/Group.model";
         // Check if exists
         const exists = await kt.exists(Models.group, {name: g.name});
         if (exists) {
+            const errorLog = await this.indexServ.logError(new Error(`Group already exists.`),`groupRepository.createGroup`);
             return new ResultErrorBadRequest(
-                `Group already exists.`, `groupRepository.createGroup`, `0`
+                errorLog.errorMessage, errorLog.errorDetail, errorLog.errorLogId.toString()
             );
         }
 

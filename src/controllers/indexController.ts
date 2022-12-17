@@ -20,7 +20,7 @@ export const pageNotFound = async (req: Request, res: Response) => {
  * GET page error not handled
  */
 export const errorNotHandled = async (error:Error, req:Request, res:Response, next:NextFunction) => {
-    const errLog = await indexServ.logError(error);
+    const errLog = await indexServ.logError(error, `Error not handled.`);
     const errs = [
         new Err(`API route error not handled.`, ``, errLog.errorLogId.toString())
     ] as IErr[];

@@ -1,7 +1,5 @@
-import {GetGroupsQuery, IGroup} from "../models/Group.model";
 import IndexRepository from "../repositories/indexRepository";
 import {ErrorLogModel} from "../models/ErrorLogModel";
-import GroupRepository from "../repositories/groupRepository";
 
 
 export default class IndexService {

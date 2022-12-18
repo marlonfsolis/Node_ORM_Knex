@@ -1,5 +1,6 @@
 import {Err, IErr} from "./Err";
 import {ReasonPhrases, StatusCodes} from "http-status-codes";
+import IndexService from "../services/indexService";
 
 export interface IResult<T> {
     success: boolean;
@@ -55,31 +56,39 @@ export class ResultError<T> extends Result<T> {
             )
         );
     }
+
+    static async instance(err: Error, detail:string=``): Promise<Result<never>> {
+        const indexServ = new IndexService();
+        const errorLog = await indexServ.logError(err,detail);
+        return new ResultErrorBadRequest<never>(
+            errorLog.errorMessage, errorLog.errorDetail, errorLog.errorLogId.toString()
+        );
+    }
 }
 
-export class ResultErrorBadRequest<T> extends Result<T> {
+export class ResultErrorBadRequest<T> extends ResultError<T> {
     constructor(msg: string, location:string, errorLogId: string) {
         if(msg.length === 0) msg = ReasonPhrases.BAD_REQUEST;
         msg = "".concat(StatusCodes.BAD_REQUEST.toString(), "|", msg);
         const err = new Err(msg, location, errorLogId);
-        super(false, undefined, err);
+        super(err);
     }
 }
 
-export class ResultErrorNotFound<T> extends Result<T> {
+export class ResultErrorNotFound<T> extends ResultError<T> {
     constructor(msg: string, location:string, errorLogId: string) {
         if(msg.length === 0) msg = ReasonPhrases.NOT_FOUND;
         msg = "".concat(StatusCodes.NOT_FOUND.toString(), "|", msg);
         const err = new Err(msg, location, errorLogId);
-        super(false, undefined, err);
+        super(err);
     }
 }
 
-export class ResultErrorInternalServer<T> extends Result<T> {
+export class ResultErrorInternalServer<T> extends ResultError<T> {
     constructor(msg: string, location:string, errorLogId: string) {
         if(msg.length === 0) msg = ReasonPhrases.INTERNAL_SERVER_ERROR;
         msg = "".concat(StatusCodes.INTERNAL_SERVER_ERROR.toString(), "|", msg);
         const err = new Err(msg, location, errorLogId);
-        super(false, undefined, err);
+        super(err);
     }
 }

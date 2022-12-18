@@ -64,10 +64,8 @@ import IndexService from "../services/indexService";
         // Check if exists
         const exists = await kt.exists(Models.group, {name: g.name});
         if (exists) {
-            const errorLog = await this.indexServ.logError(new Error(`Group already exists.`),`groupRepository.createGroup`);
-            return new ResultErrorBadRequest(
-                errorLog.errorMessage, errorLog.errorDetail, errorLog.errorLogId.toString()
-            );
+            return ResultErrorBadRequest.instance(
+                new Error(`Group already exists.`), `groupRepository.createGroup`);
         }
 
         await db<IGroup>(Models.group).insert(g);

@@ -1,7 +1,8 @@
-import {NextFunction, Request, Response, ErrorRequestHandler} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Err, IErr} from "../shared/Err";
 import {HttpResponseInternalServerError, HttpResponseNotFound} from "../shared/HttpResponse";
 import IndexService from "../services/indexService";
+import {ErrorLevel} from "../models/ErrorLogModel";
 
 const indexServ = new IndexService();
 
@@ -20,7 +21,7 @@ export const pageNotFound = async (req: Request, res: Response) => {
  * GET page error not handled
  */
 export const errorNotHandled = async (error:Error, req:Request, res:Response, next:NextFunction) => {
-    const errLog = await indexServ.logError(error, `Error not handled.`);
+    const errLog = await indexServ.logError(error, `Error not handled.`, ErrorLevel.Fatal);
     const errs = [
         new Err(`API route error not handled.`, ``, errLog.errorLogId.toString())
     ] as IErr[];

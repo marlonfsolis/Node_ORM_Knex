@@ -1,30 +1,39 @@
-import {Err} from "../shared/Err";
+
+export enum ErrorLevel {
+    Fatal = 0,
+    Error = 1,
+    Info = 2,
+    Debug = 3
+}
 
 export interface IErrorLogModel {
     errorLogId: number,
-    errorMessage: string,
-    errorDetail: string,
+    level: ErrorLevel,
+    message: string,
+    detail: string,
     errorDate: Date
 }
 
 export class ErrorLogModel implements IErrorLogModel {
     public errorLogId: number;
-    public errorMessage: string;
-    public errorDetail: string;
-    public errorStack: string = ``;
+    public level:ErrorLevel;
+    public message: string;
+    public detail: string;
+    public stack: string = ``;
     public errorDate: Date;
 
-    constructor(errMsg:string, errDetail:string=``) {
+    constructor(errMsg:string, errDetail:string=``, errLevel:ErrorLevel=ErrorLevel.Error) {
         this.errorLogId = 0;
-        this.errorMessage = errMsg;
-        this.errorDetail = errDetail;
+        this.level = errLevel;
+        this.message = errMsg;
+        this.detail = errDetail;
         this.errorDate = new Date();
     }
 
-    public static createWithError(err: Error, errDetail:string=``) {
-        const errLog = new ErrorLogModel(err.message, errDetail);
+    public static createWithError(err: Error, errDetail:string=``, level:ErrorLevel=ErrorLevel.Error) {
+        const errLog = new ErrorLogModel(err.message, errDetail, level);
         if (err.stack) {
-            errLog.errorStack = JSON.stringify(err.stack);
+            errLog.stack = JSON.stringify(err.stack);
         }
         return errLog;
     }

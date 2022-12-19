@@ -1,6 +1,7 @@
 import {Err, IErr} from "./Err";
 import {ReasonPhrases, StatusCodes} from "http-status-codes";
 import IndexService from "../services/indexService";
+import {ErrorLevel} from "../models/ErrorLogModel";
 
 export interface IResult<T> {
     success: boolean;
@@ -57,11 +58,11 @@ export class ResultError<T> extends Result<T> {
         );
     }
 
-    static async instance(err: Error, detail:string=``): Promise<Result<never>> {
+    static async instance(err: Error, detail:string=``, level:ErrorLevel=ErrorLevel.Error): Promise<Result<never>> {
         const indexServ = new IndexService();
-        const errorLog = await indexServ.logError(err,detail);
+        const errorLog = await indexServ.logError(err,detail,level);
         return new ResultErrorBadRequest<never>(
-            errorLog.errorMessage, errorLog.errorDetail, errorLog.errorLogId.toString()
+            errorLog.message, errorLog.detail, errorLog.errorLogId.toString()
         );
     }
 }

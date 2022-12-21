@@ -22,33 +22,24 @@ import {dbDebug} from "../startup/debuggers";
      * Get a group list
      */
     async getGroups(params:GetGroupsQuery): Promise<IResult<IGroup[]>> {
-        let groups = [] as IGroup[];
-
-        let query = db<IGroup>(Models.group)
-            .where(function() {
-                if (params.name_f.length > 0)
-                    this.where(`name`, params.name_f);
-            })
-            .andWhere(function() {
-                if (params.description_f.length > 0)
-                    this.where(`description`, params.description_f);
-            })
-            .andWhere(function () {
-               if (params.name_s.length > 0)
-                    this.orWhereLike(`name`, params.name_s)
-            })
-            .andWhere(function () {
-                if (params.description_s.length > 0)
-                    this.orWhereLike(`description`, params.description_s)
-            })
-            .limit(params.Limit)
-            .offset(params.Skip);
-
-        const g = await query.select(`name`, `description`);
-        // console.log(query.toSQL());
-
-        groups = g as IGroup[];
-        return new ResultOk<IGroup[]>(groups);
+        const mysql = `
+            SELECT *
+            FROM \`group\` g
+            WHERE (IFNULL(:name_f,'') = '' OR g.name = :name_f)
+            AND (IFNULL(:description_f,'') = '' OR g.description = :description_f)
+            AND (IFNULL(:name_s,'') = '' OR g.name LIKE :name_s)
+            AND (IFNULL(:description_s,'') = '' OR g.description LIKE :description_s)
+            LIMIT ${params.limit}
+            OFFSET ${params.skip};
+        `;
+        const [g1] = await db
+            .raw(mysql, {
+                name_f:params.name_f,
+                description_f:params.description_f,
+                name_s:params.name_s,
+                description_s:params.description_s
+            });
+        return new ResultOk<IGroup[]>(g1);
     }
 
 
